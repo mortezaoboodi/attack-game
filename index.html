@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Monster Slayer</title>
+    <script src="vue.js"></script>
+    <link rel="stylesheet" href="css/foundation.min.css">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+
+<body>
+    <div id="app">
+        <section class="row">
+            <div class="small-6 columns">
+                <h1 class="text-center">YOU</h1>
+                <div class="healthbar">
+                    <div :style="{'width':yourScore+'%'}" class="healthbar text-center" style="background-color: green; margin:0; color: rgb(255, 255, 255);">
+                        {{yourScore}}
+                    </div>
+                </div>
+            </div>
+            <div class="small-6 columns">
+                <h1 class="text-center">MONSTER</h1>
+                <div class="healthbar">
+                    <div :style="[{'width': monsterScore+'%'}]" class="healthbar text-center" style="background-color: green; margin: 0; color: white;">
+                        {{monsterScore}}
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="row controls" v-if='!start'>
+            <div class="small-12 columns">
+                <button id="start-game" @click=toggle()>START NEW GAME</button>
+            </div>
+        </section>
+        <section class="row controls" v-if='start'>
+            <div class="small-12 columns">
+                <button id="attack" @click="attack()">ATTACK</button>
+                <button id="special-attack" @click="specialAttack()">SPECIAL ATTACK</button>
+                <button id="heal" @click="heal()">HEAL</button>
+                <button id="give-up" @click="start=!start">GIVE UP</button>
+            </div>
+        </section>
+        <section class="row log">
+            <div class="small-12 columns">
+                <template>
+                    <ul v-for="ingredient in scores">
+                        <li :style="{'background-color':color2}">
+                            monster hits player: {{ingredient.myScore}}
+                        </li>
+                        <li :style="{'background-color':color}">
+                            player hits monster:{{ingredient.enemyScores}}
+                        </li>
+                    </ul>
+                </template>
+            </div>
+        </section>
+    </div>
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+                start: false,
+                yourScore: 100,
+                monsterScore: 100,
+                scores: [],
+                color: 'green',
+                color2: 'yellow'
+
+
+            },
+            methods: {
+                toggle: function () {
+                    this.start = !this.start;
+                    this.yourScore = 100;
+                    this.monsterScore = 100;
+                    this.scores = [];
+                },
+                attack: function () {
+                    var randX = Math.random() * 10;
+                    randX = Math.round(randX);
+                    this.yourScore = this.yourScore - randX;
+
+                    var randY = Math.random() * 10;
+                    randY = Math.round(randY);
+                    this.monsterScore = this.monsterScore - randY;
+
+                    var score = { myScore: randX, enemyScores: randY };
+                    this.scores.push(score);
+
+                    if ((this.yourScore | this.monsterScore) <= 0) {
+                        if (this.yourScore >= this.monsterScore) {
+                            if (confirm("you win/new Game?")) {
+                                this.yourScore = 100;
+                                this.monsterScore = 100;
+                                this.scores = [];
+                            }
+
+                        }
+                        else {
+                            if (confirm("monster win/new Game?")) {
+                                this.yourScore = 100;
+                                this.monsterScore = 100;
+                                this.scores = [];
+                            }
+                        }
+                    };
+                },
+                specialAttack: function () {
+                    randX = Math.random() * 20;
+                    randX = Math.round(randX);
+                    this.yourScore = this.yourScore - randX;
+
+                    randY = Math.random() * 20;
+                    randY = Math.round(randY);
+                    this.monsterScore = this.monsterScore - randY;
+
+                    var score = { myScore: randX, enemyScores: randY };
+                    this.scores.push(score);
+
+
+                    if ((this.yourScore | this.monsterScore) <= 0) {
+                        if (this.yourScore >= this.monsterScore) {
+                            if (confirm("you win/new Game?")) {
+                                this.yourScore = 100;
+                                this.monsterScore = 100;
+                                this.scores = [];
+                            }
+
+                        }
+                        else {
+                            if (confirm("monster win/new Game?")) {
+                                this.yourScore = 100;
+                                this.monsterScore = 100;
+                                this.scores = [];
+                            }
+                        }
+                    };
+
+                },
+                heal: function () {
+                    var randX = Math.random() * 10;
+                    randX = Math.round(randX);
+                    this.yourScore = this.yourScore + randX;
+
+                    var randY = Math.random() * 10;
+                    randY = Math.round(randY);
+                    this.yourScore = this.yourScore - randY;
+
+                    var score = { myScore: randY, enemyScores: randX };
+                    this.scores.push(score);
+
+                    if ((this.yourScore | this.monsterScore) <= 0) {
+                        if (this.yourScore >= this.monsterScore) {
+                            if (confirm("you win/new Game?")) {
+                                this.yourScore = 100;
+                                this.monsterScore = 100;
+                                this.scores = [];
+                            }
+
+                        }
+                        else {
+                            if (confirm("monster win/new Game?")) {
+                                this.yourScore = 100;
+                                this.monsterScore = 100;
+                                this.scores = [];
+                            }
+                        }
+                    };
+                }
+            },
+            computed: {
+                myStyle: function () {
+                    return {
+                        weidth: this.yourScore + '%'
+                    }
+                }
+            }
+
+
+
+        })
+    </script>
+</body>
+
+</html>
